@@ -1,11 +1,12 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"football/common/consts"
 	"football/lib/http"
+	"football/lib/leisu"
 	"football/lib/reg"
-	"football/lib/tools"
 	"time"
 )
 
@@ -53,7 +54,7 @@ func main() {
 		return
 	}
 
-	matchJson := tools.Rot(matchContent[1], 13)
+	matchJson := leisu.Rot(matchContent[1], 13)
 
 	teamsContent, err := reg.FindStringSubMatch(jsContent, consts.RegexpPatternMatchTeams)
 
@@ -62,10 +63,22 @@ func main() {
 		return
 	}
 
-	teamJson := tools.Rot(teamsContent[1], 13)
+	teamJson := leisu.Rot(teamsContent[1], 13)
 
-	fmt.Println(matchJson)
-	fmt.Println(teamJson)
+	match := &leisu.TopObject{}
+	teams := make([]*leisu.Team, 0, 8)
+
+	err = json.Unmarshal([]byte(matchJson), match)
+	if err != nil {
+		fmt.Printf("match Unmarshal failed. err: %s", err)
+		return
+	}
+
+	err = json.Unmarshal([]byte(teamJson), &teams)
+	if err != nil {
+		fmt.Printf("team Unmarshal failed. err: %s", err)
+		return
+	}
 
 	return
 }
