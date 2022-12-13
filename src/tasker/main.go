@@ -33,10 +33,11 @@ func main() {
 		fmt.Printf("no js url. result: %s", js)
 		return
 	}
-	header := map[string][]string{}
-	header["referer"] = []string{"https://www.leisu.com/yc/fixtures"}
-	header["user-agent"] = []string{"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"}
-	header["accept-encoding"] = []string{"gzip, deflate, br"}
+	header := make(map[string]string)
+	//header["Content-Type"] = "text/html; charset=UTF-8"
+	header["referer"] = "https://www.leisu.com/yc/fixtures"
+	header["user-agent"] = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
+	header["accept-encoding"] = "gzip, deflate, br"
 
 	rspCode, rsp, err = httpClient.Get(js[0], header, nil)
 

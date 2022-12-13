@@ -2,6 +2,7 @@ package http
 
 import (
 	"bytes"
+	"compress/gzip"
 	"fmt"
 	"io"
 	"net/http"
@@ -13,15 +14,15 @@ type Client struct {
 	client *http.Client
 }
 
-func (c *Client) Get(url string, header map[string][]string, body []byte) (rspCode int, rspBody []byte, err error) {
+func (c *Client) Get(url string, header map[string]string, body []byte) (rspCode int, rspBody []byte, err error) {
 	return c.Do(http.MethodGet, url, header, body)
 }
 
-func (c *Client) Post(url string, header map[string][]string, body []byte) (rspCode int, rspBody []byte, err error) {
+func (c *Client) Post(url string, header map[string]string, body []byte) (rspCode int, rspBody []byte, err error) {
 	return c.Do(http.MethodPost, url, header, body)
 }
 
-func (c *Client) Do(method, url string, header map[string][]string, body []byte) (rspCode int, rspBody []byte, err error) {
+func (c *Client) Do(method, url string, header map[string]string, body []byte) (rspCode int, rspBody []byte, err error) {
 	var req *http.Request
 
 	if len(body) > 0 {
@@ -34,8 +35,8 @@ func (c *Client) Do(method, url string, header map[string][]string, body []byte)
 		return
 	}
 
-	if len(header) > 0 {
-		req.Header = header
+	for k, v := range header {
+		req.Header.Set(k, v)
 	}
 
 	response, err := c.client.Do(req)
@@ -45,16 +46,22 @@ func (c *Client) Do(method, url string, header map[string][]string, body []byte)
 	}
 
 	rspCode = response.StatusCode
-	rspBody, err = io.ReadAll(response.Body)
-
-	if err != nil {
-		return
-	}
 
 	if rspCode != http.StatusOK {
 		err = fmt.Errorf("error http code %d", rspCode)
 		return
 	}
+
+	rBody := response.Body
+
+	if response.Header.Get("Content-Encoding") == "gzip" {
+		rBody, err = gzip.NewReader(response.Body)
+		if err != nil {
+			fmt.Println("http resp unzip is failed,err: ", err)
+		}
+	}
+
+	rspBody, err = io.ReadAll(rBody)
 
 	return
 }
