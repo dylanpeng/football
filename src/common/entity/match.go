@@ -19,18 +19,19 @@ type Match struct {
 	StatusId            int    `json:"status_id"`
 	HomeScore           int    `json:"home_score"`
 	HomeFirstHalfScore  int    `json:"home_first_half_score"`
-	HomeSecondHalfScore int64  `json:"home_second_half_score"`
-	HomeRedCard         int64  `json:"home_red_card"`
-	HomeYellowCard      int64  `json:"home_yellow_card"`
-	HomeCorner          int64  `json:"home_corner"`
-	AwayScore           int64  `json:"away_score"`
-	AwayFirstHalfScore  int64  `json:"away_first_half_score"`
-	AwaySecondHalfScore int64  `json:"away_second_half_score"`
-	AwayRedCard         int64  `json:"away_red_card"`
-	AwayYellowCard      int64  `json:"away_yellow_card"`
-	AwayCorner          int64  `json:"away_corner"`
+	HomeSecondHalfScore int    `json:"home_second_half_score"`
+	HomeRedCard         int    `json:"home_red_card"`
+	HomeYellowCard      int    `json:"home_yellow_card"`
+	HomeCorner          int    `json:"home_corner"`
+	AwayScore           int    `json:"away_score"`
+	AwayFirstHalfScore  int    `json:"away_first_half_score"`
+	AwaySecondHalfScore int    `json:"away_second_half_score"`
+	AwayRedCard         int    `json:"away_red_card"`
+	AwayYellowCard      int    `json:"away_yellow_card"`
+	AwayCorner          int    `json:"away_corner"`
 	OddList             int64  `json:"odd_list"`
 	HalfOddList         int64  `json:"half_odd_list"`
+	HashValue           string `json:"hash_value"`
 	CreateTime          int64  `json:"create_time"`
 	UpdateTime          int64  `json:"update_time"`
 }

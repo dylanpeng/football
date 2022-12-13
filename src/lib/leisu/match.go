@@ -1,5 +1,11 @@
 package leisu
 
+import (
+	"crypto/md5"
+	"encoding/hex"
+	"encoding/json"
+)
+
 type MachTeam struct {
 	Id   int64  `json:"id"`
 	Name string `json:"name"`
@@ -9,8 +15,8 @@ type MachTeam struct {
 type TopObject struct {
 	CompType    int      `json:"comp_type"`
 	CurRound    int      `json:"cur_round"`
-	CurStageId  int      `json:"cur_stage_id"`
-	CurSeasonId int      `json:"cur_season_id"`
+	CurStageId  int64    `json:"cur_stage_id"`
+	CurSeasonId int64    `json:"cur_season_id"`
 	Stages      []*Stage `json:"stages"`
 }
 
@@ -20,7 +26,7 @@ type Stage struct {
 	GroupCount int      `json:"group_count"`
 	RoundCount int      `json:"round_count"`
 	Mode       int      `json:"mode"`
-	Matched    []*Match `json:"matches"`
+	Matches    []*Match `json:"matches"`
 }
 
 type Match struct {
@@ -41,6 +47,27 @@ type Match struct {
 	AwayScores  []int        `json:"away_scores"`
 	OddList     []string     `json:"odd_list"`
 	HalfOddList []string     `json:"half_odd_list"`
+}
+
+//func (m *Match) String() string {
+//	return fmt.Sprintf("%+v", *m)
+//}
+
+func (m *Match) GetHashValue() (hashValue string) {
+	if m == nil {
+		return
+	}
+
+	matchByte, err := json.Marshal(m)
+
+	if err != nil {
+		return
+	}
+
+	mdByte := md5.Sum(matchByte)
+	hashValue = hex.EncodeToString(mdByte[:])
+
+	return
 }
 
 type Competition struct {

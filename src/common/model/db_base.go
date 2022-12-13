@@ -6,32 +6,27 @@ import (
 	"gorm.io/gorm"
 )
 
-type DbBase struct {
+type dbBase struct {
 	readDbName  string
 	writeDbName string
 }
 
-func (d *DbBase) getReadDB() (db *gorm.DB, err error) {
-	db, err = common.GetDb(d.readDbName)
-
-	if err != nil {
-		return
+func createDBModel(readInstance, writeInstance string) *dbBase {
+	return &dbBase{
+		readDbName:  readInstance,
+		writeDbName: writeInstance,
 	}
-
-	return
 }
 
-func (d *DbBase) getWriteDB() (db *gorm.DB, err error) {
-	db, err = common.GetDb(d.writeDbName)
-
-	if err != nil {
-		return
-	}
-
-	return
+func (d *dbBase) getDB() (db *gorm.DB, err error) {
+	return common.GetDb(d.writeDbName)
 }
 
-func (d *DbBase) Add(entity entity.IEntity) (err error) {
+func (d *dbBase) getReadDB() (db *gorm.DB, err error) {
+	return common.GetDb(d.readDbName)
+}
+
+func (d *dbBase) Add(entity entity.IEntity) (err error) {
 	db, err := common.GetDb(d.writeDbName)
 
 	if err != nil {
@@ -42,7 +37,7 @@ func (d *DbBase) Add(entity entity.IEntity) (err error) {
 	return
 }
 
-func (d *DbBase) Update(entity entity.IEntity, params map[string]interface{}) (err error) {
+func (d *dbBase) Update(entity entity.IEntity, params map[string]interface{}) (err error) {
 	db, err := common.GetDb(d.writeDbName)
 
 	if err != nil {
@@ -58,7 +53,7 @@ func (d *DbBase) Update(entity entity.IEntity, params map[string]interface{}) (e
 	return
 }
 
-func (d *DbBase) Get(entity entity.IEntity) (err error) {
+func (d *dbBase) Get(entity entity.IEntity) (err error) {
 	db, err := common.GetDb(d.writeDbName)
 
 	if err != nil {
