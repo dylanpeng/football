@@ -4,8 +4,13 @@ import (
 	"fmt"
 	"football/common"
 	"football/common/config"
-	"football/lib/leisu"
-	"football/tasker/logic/schedule"
+	"football/lib/scheduler"
+	"football/tasker/scheduler/match"
+	"football/tasker/scheduler/team"
+	"football/tasker/util"
+	"os"
+	"os/signal"
+	"syscall"
 )
 
 func main() {
@@ -37,14 +42,33 @@ func main() {
 		return
 	}
 
-	scheduleObject, err := leisu.QueryMatch()
+	// init schedule
+	util.InitMaster([]scheduler.IProvider{
+		&match.MatchProvider{&scheduler.Provider{
+			Name:           "schedule_match",
+			CronExpression: "0 */1 * * * *",
+		}},
+		&team.TeamProvider{&scheduler.Provider{
+			Name:           "schedule_team",
+			CronExpression: "* * * * * *",
+		}},
+	})
 
-	if err != nil {
-		fmt.Printf("QueryMatch failed. match: %s | err: %s", scheduleObject, err)
-		return
+	// waitting for exit signal
+	exit := make(chan os.Signal, 1)
+	stopSigs := []os.Signal{
+		syscall.SIGHUP,
+		syscall.SIGINT,
+		syscall.SIGQUIT,
+		syscall.SIGABRT,
+		syscall.SIGKILL,
+		syscall.SIGTERM,
 	}
+	signal.Notify(exit, stopSigs...)
 
-	_ = schedule.InitSchedule(scheduleObject)
+	// catch exit signal
+	sign := <-exit
+	fmt.Printf("stop by exit signal '%s'\n", sign)
 
 	return
 }

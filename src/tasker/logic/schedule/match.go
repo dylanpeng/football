@@ -8,7 +8,11 @@ import (
 	"time"
 )
 
-func InitSchedule(object *leisu.TopObject) (err error) {
+var Match = matchLogic{}
+
+type matchLogic struct{}
+
+func (s *matchLogic) InitSchedule(object *leisu.TopObject) (err error) {
 	if object == nil {
 		return
 	}
@@ -22,13 +26,13 @@ func InitSchedule(object *leisu.TopObject) (err error) {
 	}
 
 	for _, match := range object.Stages[0].Matches {
-		_ = InitMatch(object, match)
+		_ = s.InitMatch(object, match)
 	}
 
 	return
 }
 
-func InitMatch(object *leisu.TopObject, match *leisu.Match) (err error) {
+func (s *matchLogic) InitMatch(object *leisu.TopObject, match *leisu.Match) (err error) {
 	entityMatch, err := model.Match.GetMatchByThirdId(match.Id)
 
 	if err != nil {
@@ -38,11 +42,11 @@ func InitMatch(object *leisu.TopObject, match *leisu.Match) (err error) {
 
 	if entityMatch == nil {
 		// 不存在，初始化比赛
-		err = AddMatch(object, match)
+		err = s.AddMatch(object, match)
 		return
 	} else if entityMatch.HashValue != match.GetHashValue() {
 		// 已存在且有修改，更新比赛信息
-		err = UpdateMatch(object, match, entityMatch)
+		err = s.UpdateMatch(object, match, entityMatch)
 		return
 	}
 
@@ -51,7 +55,7 @@ func InitMatch(object *leisu.TopObject, match *leisu.Match) (err error) {
 	return
 }
 
-func AddMatch(object *leisu.TopObject, match *leisu.Match) (err error) {
+func (s *matchLogic) AddMatch(object *leisu.TopObject, match *leisu.Match) (err error) {
 	entityMatch := &entity.Match{
 		MatchThirdId:        match.Id,
 		LeagueThirdId:       82,
@@ -96,7 +100,7 @@ func AddMatch(object *leisu.TopObject, match *leisu.Match) (err error) {
 	return
 }
 
-func UpdateMatch(object *leisu.TopObject, match *leisu.Match, entityMatch *entity.Match) (err error) {
+func (s *matchLogic) UpdateMatch(object *leisu.TopObject, match *leisu.Match, entityMatch *entity.Match) (err error) {
 	prop := make(map[string]any)
 	prop["match_time"] = match.MatchTime
 	prop["status_id"] = match.StatusId
