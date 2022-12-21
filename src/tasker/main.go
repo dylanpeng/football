@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"football/common"
 	"football/common/config"
@@ -8,35 +9,32 @@ import (
 	"football/tasker/scheduler/match"
 	"football/tasker/scheduler/team"
 	"football/tasker/util"
+	"github.com/BurntSushi/toml"
 	"os"
 	"os/signal"
 	"syscall"
 )
 
+var (
+	configFile = flag.String("c", "config.toml", "config file path")
+)
+
 func main() {
-	conf := config.Config{}
+	// parse flag
+	flag.Parse()
 
-	conf.DBConfigs = make([]*config.DBConfig, 0, 8)
+	conf := &config.Config{}
 
-	conf.DBConfigs = append(conf.DBConfigs, &config.DBConfig{
-		Name:         "master",
-		UserName:     "dev",
-		Password:     "123!@#qweASD",
-		SourceUrl:    "127.0.0.1",
-		Port:         "3306",
-		DataBaseName: "sport",
-	})
+	m, err := toml.DecodeFile(*configFile, conf)
 
-	conf.DBConfigs = append(conf.DBConfigs, &config.DBConfig{
-		Name:         "slave",
-		UserName:     "dev",
-		Password:     "123!@#qweASD",
-		SourceUrl:    "127.0.0.1",
-		Port:         "3306",
-		DataBaseName: "sport",
-	})
+	if err != nil {
+		fmt.Printf("toml decode failed. err: %s | m: %s", err, m)
+		return
+	}
 
-	err := common.InitDB(conf.DBConfigs)
+	_ = conf.Init()
+
+	err = common.InitDB()
 	if err != nil {
 		fmt.Printf("Init Db failed. err: %s", err)
 		return

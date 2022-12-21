@@ -1,5 +1,7 @@
 package entity
 
+import "fmt"
+
 type Match struct {
 	Id                  int64  `gorm:"primaryKey" json:"id"`
 	MatchThirdId        int64  `gorm:"column:match_third_id" json:"match_third_id"`
@@ -38,4 +40,12 @@ type Match struct {
 
 func (e *Match) TableName() string {
 	return "data_match"
+}
+
+func (e *Match) PrimarySeted() bool {
+	return e.Id > 0
+}
+
+func (e *Match) String() string {
+	return fmt.Sprintf("%+v", *e)
 }

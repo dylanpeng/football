@@ -6,17 +6,18 @@ import (
 )
 
 var Team = &teamModel{
-	dbBase: createDBModel(
-		"slave",
-		"master"),
+	baseDBModel: createDBModel(
+		"main-slave",
+		"main-master",
+	),
 }
 
 type teamModel struct {
-	*dbBase
+	*baseDBModel
 }
 
 func (t *teamModel) GetTeamByThirdId(thirdId int64) (team *entity.Team, err error) {
-	db, err := t.getDB()
+	db, err := t.getDB(false)
 
 	if err != nil {
 		return

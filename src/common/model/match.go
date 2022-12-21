@@ -6,17 +6,18 @@ import (
 )
 
 var Match = &matchModel{
-	dbBase: createDBModel(
-		"slave",
-		"master"),
+	baseDBModel: createDBModel(
+		"main-slave",
+		"main-master",
+	),
 }
 
 type matchModel struct {
-	*dbBase
+	*baseDBModel
 }
 
 func (m *matchModel) GetMatchByThirdId(thirdId int64) (match *entity.Match, err error) {
-	db, err := m.getDB()
+	db, err := m.getDB(false)
 
 	if err != nil {
 		return
