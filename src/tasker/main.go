@@ -4,10 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"football/common"
-	"football/lib/scheduler"
 	"football/tasker/config"
-	"football/tasker/scheduler/match"
-	"football/tasker/scheduler/team"
 	"football/tasker/util"
 	"log"
 	"os"
@@ -42,16 +39,7 @@ func main() {
 	}
 
 	// init schedule
-	util.InitMaster([]scheduler.IProvider{
-		&match.MatchProvider{&scheduler.Provider{
-			Name:           "schedule_match",
-			CronExpression: "0 */1 * * * *",
-		}},
-		&team.TeamProvider{&scheduler.Provider{
-			Name:           "schedule_team",
-			CronExpression: "* * * * * *",
-		}},
-	})
+	util.InitMaster()
 
 	// waitting for exit signal
 	exit := make(chan os.Signal, 1)

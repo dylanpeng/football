@@ -5,6 +5,7 @@ import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"io"
+	"os"
 	"time"
 )
 
@@ -49,8 +50,8 @@ func (l *Logger) Init() error {
 
 	core := zapcore.NewCore(
 		zapcore.NewConsoleEncoder(encoderConf),
-		//zapcore.NewMultiWriteSyncer(writer, zapcore.AddSync(os.Stdout)),
-		writer,
+		zapcore.NewMultiWriteSyncer(writer, zapcore.AddSync(os.Stdout)),
+		//writer,
 		level,
 	)
 

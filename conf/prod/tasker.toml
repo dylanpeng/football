@@ -1,0 +1,8 @@
+
+[[providers]]
+name            = "schedule_match"
+cron_expression = "0 */1 * * * *"
+
+[[providers]]
+name            = "schedule_team"
+cron_expression = "* * * * * *"

@@ -6,8 +6,8 @@ import (
 )
 
 type Config struct {
-	DB  map[string]*gorm.Config
-	Log *logger.Config `toml:"log" json:"log"`
+	DB  map[string]*gorm.Config `toml:"db" json:"db"`
+	Log *logger.Config          `toml:"log" json:"log"`
 }
 
 var conf *Config

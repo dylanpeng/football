@@ -2,6 +2,7 @@ package config
 
 import (
 	oConf "football/common/config"
+	"football/lib/scheduler"
 	"github.com/BurntSushi/toml"
 )
 
@@ -9,6 +10,7 @@ var conf *Config
 
 type Config struct {
 	*oConf.Config
+	Providers []*scheduler.Provider `toml:"providers" json:"providers"`
 }
 
 func Init(file string) error {
@@ -25,4 +27,8 @@ func Init(file string) error {
 	}
 
 	return nil
+}
+
+func GetConfig() *Config {
+	return conf
 }
