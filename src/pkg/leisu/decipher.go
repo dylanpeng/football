@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"compress/zlib"
 	"encoding/base64"
-	"fmt"
+	"football/common"
 	"io"
 	"net/url"
 	"strconv"
@@ -36,7 +36,7 @@ func Roott(data string, i int32) (result string) {
 func Pushmsg(data string) (result string) {
 	deByte, err := base64.StdEncoding.DecodeString(data)
 	if err != nil {
-		fmt.Printf("decode failed. err: %s", err)
+		common.Logger.Infof("decode failed. err: %s", err)
 		return
 	}
 
@@ -46,7 +46,7 @@ func Pushmsg(data string) (result string) {
 
 	b, err := base64.StdEncoding.DecodeString(a)
 	if err != nil {
-		fmt.Printf("decode failed. err: %s", err)
+		common.Logger.Infof("decode failed. err: %s", err)
 		return
 	}
 
@@ -54,13 +54,13 @@ func Pushmsg(data string) (result string) {
 	d := strings.Replace(c, "%u", "\\u", -1)
 	e, err := url.QueryUnescape(d)
 	if err != nil {
-		fmt.Printf("QueryUnescape failed. err: %s", err)
+		common.Logger.Infof("QueryUnescape failed. err: %s", err)
 		return
 	}
 
 	f, err := zhToUnicode([]byte(e))
 	if err != nil {
-		fmt.Printf("zhToUnicode failed. err: %s", err)
+		common.Logger.Infof("zhToUnicode failed. err: %s", err)
 		return
 	}
 

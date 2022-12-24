@@ -2,7 +2,7 @@ package leisu
 
 import (
 	"encoding/json"
-	"fmt"
+	"football/common"
 	"football/lib/http"
 	"football/lib/reg"
 	"time"
@@ -23,19 +23,19 @@ func QueryMatch() (match *TopObject, err error) {
 	rspCode, rsp, err := httpClient.Get(url, nil, nil)
 
 	if err != nil {
-		fmt.Printf("get fixtures failed. httpCode: %d | rsp: %s", rspCode, rsp)
+		common.Logger.Infof("get fixtures failed. httpCode: %d | rsp: %s", rspCode, rsp)
 		return
 	}
 
 	js, err := reg.FindAllString(string(rsp), RegexpPatternMatchJs)
 
 	if err != nil {
-		fmt.Printf("FindAllString failed. err: %s", err)
+		common.Logger.Infof("FindAllString failed. err: %s", err)
 		return
 	}
 
 	if len(js) == 0 {
-		fmt.Printf("no js url. result: %s", js)
+		common.Logger.Infof("no js url. result: %s", js)
 		return
 	}
 	header := make(map[string]string)
@@ -47,7 +47,7 @@ func QueryMatch() (match *TopObject, err error) {
 	rspCode, rsp, err = httpClient.Get(js[0], header, nil)
 
 	if err != nil {
-		fmt.Printf("get match js failed. httpCode: %d | rsp: %s", rspCode, rsp)
+		common.Logger.Infof("get match js failed. httpCode: %d | rsp: %s", rspCode, rsp)
 		return
 	}
 
@@ -56,12 +56,12 @@ func QueryMatch() (match *TopObject, err error) {
 	matchContent, err := reg.FindStringSubMatch(jsContent, RegexpPatternMatchContent)
 
 	if err != nil {
-		fmt.Printf("get match content failed. matchContent: %s | err: %s", matchContent, err)
+		common.Logger.Infof("get match content failed. matchContent: %s | err: %s", matchContent, err)
 		return
 	}
 
 	if len(matchContent) < 2 {
-		fmt.Printf("get match js content failed. jsContent: %s | err: %s", jsContent, err)
+		common.Logger.Infof("get match js content failed. jsContent: %s | err: %s", jsContent, err)
 		return
 	}
 
@@ -70,14 +70,14 @@ func QueryMatch() (match *TopObject, err error) {
 
 	err = json.Unmarshal([]byte(matchJson), match)
 	if err != nil {
-		fmt.Printf("match Unmarshal failed. err: %s", err)
+		common.Logger.Infof("match Unmarshal failed. err: %s", err)
 		return
 	}
 
 	//teamsContent, err := reg.FindStringSubMatch(jsContent, RegexpPatternMatchTeams)
 	//
 	//if err != nil {
-	//	fmt.Printf("get match content failed. teamsContent: %s | err: %s", teamsContent, err)
+	//	common.Logger.Infof("get match content failed. teamsContent: %s | err: %s", teamsContent, err)
 	//	return
 	//}
 	//
@@ -87,7 +87,7 @@ func QueryMatch() (match *TopObject, err error) {
 	//
 	//err = json.Unmarshal([]byte(teamJson), &teams)
 	//if err != nil {
-	//	fmt.Printf("team Unmarshal failed. err: %s", err)
+	//	common.Logger.Infof("team Unmarshal failed. err: %s", err)
 	//	return
 	//}
 

@@ -1,9 +1,9 @@
 package match
 
 import (
-	"fmt"
-	"football/lib/leisu"
+	"football/common"
 	"football/lib/scheduler"
+	"football/pkg/leisu"
 	"football/tasker/logic/schedule"
 	"time"
 )
@@ -13,12 +13,12 @@ type MatchProvider struct {
 }
 
 func (m *MatchProvider) Run() {
-	fmt.Println("match schedule:", time.Now())
+	common.Logger.Infof("match schedule:", time.Now())
 
 	scheduleObject, err := leisu.QueryMatch()
 
 	if err != nil {
-		fmt.Printf("QueryMatch failed. match: %s | err: %s", scheduleObject, err)
+		common.Logger.Errorf("QueryMatch failed. match: %s | err: %s", scheduleObject, err)
 		return
 	}
 

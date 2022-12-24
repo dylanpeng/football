@@ -1,10 +1,10 @@
 package schedule
 
 import (
-	"fmt"
+	"football/common"
 	"football/common/entity"
 	"football/common/model"
-	"football/lib/leisu"
+	"football/pkg/leisu"
 	"time"
 )
 
@@ -36,7 +36,7 @@ func (s *matchLogic) InitMatch(object *leisu.TopObject, match *leisu.Match) (err
 	entityMatch, err := model.Match.GetMatchByThirdId(match.Id)
 
 	if err != nil {
-		fmt.Printf("GetMatchByThirdId failed. id: %d | err: %s\n", match.Id, err)
+		common.Logger.Infof("GetMatchByThirdId failed. id: %d | err: %s\n", match.Id, err)
 		return
 	}
 
@@ -50,7 +50,7 @@ func (s *matchLogic) InitMatch(object *leisu.TopObject, match *leisu.Match) (err
 		return
 	}
 
-	fmt.Printf("no need update. matchId: %d | home: %s | away: %s\n", match.Id, match.HomeTeam.Name, match.AwayTeam.Name)
+	common.Logger.Infof("no need update. matchId: %d | home: %s | away: %s\n", match.Id, match.HomeTeam.Name, match.AwayTeam.Name)
 
 	return
 }
@@ -92,9 +92,9 @@ func (s *matchLogic) AddMatch(object *leisu.TopObject, match *leisu.Match) (err 
 	err = model.Match.Add(entityMatch)
 
 	if err != nil {
-		fmt.Printf("match add failed. match: %s | err: %s\n", match, err)
+		common.Logger.Infof("match add failed. match: %s | err: %s\n", match, err)
 	} else {
-		fmt.Printf("match add success. matchId: %d\n", match.Id)
+		common.Logger.Infof("match add success. matchId: %d\n", match.Id)
 	}
 
 	return
@@ -122,9 +122,9 @@ func (s *matchLogic) UpdateMatch(object *leisu.TopObject, match *leisu.Match, en
 	err = model.Match.Update(entityMatch, prop)
 
 	if err != nil {
-		fmt.Printf("match update failed. match: %s | err: %s\n", match, err)
+		common.Logger.Infof("match update failed. match: %s | err: %s\n", match, err)
 	} else {
-		fmt.Printf("match update success. matchId: %d\n", match.Id)
+		common.Logger.Infof("match update success. matchId: %d\n", match.Id)
 	}
 
 	return
