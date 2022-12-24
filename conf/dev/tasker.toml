@@ -1,8 +1,8 @@
 
-[[providers]]
-name            = "schedule_match"
+[providers.match_provider]
+name            = "match_provider"
 cron_expression = "0 */1 * * * *"
 
-[[providers]]
-name            = "schedule_team"
+[providers.team_provider]
+name            = "team_provider"
 cron_expression = "* * * * * *"
