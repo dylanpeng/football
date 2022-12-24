@@ -1,7 +1,7 @@
 package team
 
 import (
-	"fmt"
+	"football/common"
 	"football/lib/scheduler"
 	"time"
 )
@@ -11,7 +11,7 @@ type TeamProvider struct {
 }
 
 func (m *TeamProvider) Run() {
-	fmt.Println("team schedule:", time.Now())
+	common.Logger.Infof("team schedule:", time.Now())
 
 	return
 }

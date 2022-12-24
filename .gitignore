@@ -1,3 +1,4 @@
 /bin/*
 /lbin/*
 /src/go.sum
+/logs/*

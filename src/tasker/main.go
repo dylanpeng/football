@@ -4,14 +4,15 @@ import (
 	"flag"
 	"fmt"
 	"football/common"
-	"football/common/config"
 	"football/lib/scheduler"
+	"football/tasker/config"
 	"football/tasker/scheduler/match"
 	"football/tasker/scheduler/team"
 	"football/tasker/util"
-	"github.com/BurntSushi/toml"
+	"log"
 	"os"
 	"os/signal"
+	"runtime"
 	"syscall"
 )
 
@@ -23,21 +24,21 @@ func main() {
 	// parse flag
 	flag.Parse()
 
-	conf := &config.Config{}
+	// set max cpu core
+	runtime.GOMAXPROCS(runtime.NumCPU())
 
-	m, err := toml.DecodeFile(*configFile, conf)
-
-	if err != nil {
-		fmt.Printf("toml decode failed. err: %s | m: %s", err, m)
-		return
+	// parse config file
+	if err := config.Init(*configFile); err != nil {
+		log.Fatalf("Fatal Error: can't parse config file!!!\n%s", err)
 	}
 
-	_ = conf.Init()
+	// init log
+	if err := common.InitLogger(); err != nil {
+		log.Fatalf("Fatal Error: can't initialize logger!!!\n%s", err)
+	}
 
-	err = common.InitDB()
-	if err != nil {
-		fmt.Printf("Init Db failed. err: %s", err)
-		return
+	if err := common.InitDB(); err != nil {
+		log.Fatalf("Fatal Error: can't initialize db clients!!!\n%s", err)
 	}
 
 	// init schedule
