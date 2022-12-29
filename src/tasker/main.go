@@ -34,6 +34,10 @@ func main() {
 		log.Fatalf("Fatal Error: can't initialize logger!!!\n%s", err)
 	}
 
+	// init cache clients
+	common.InitCache()
+
+	// init DB
 	if err := common.InitDB(); err != nil {
 		log.Fatalf("Fatal Error: can't initialize db clients!!!\n%s", err)
 	}

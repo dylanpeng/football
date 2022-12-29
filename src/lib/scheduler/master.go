@@ -13,6 +13,7 @@ type Master struct {
 func (m *Master) Start() {
 	for _, p := range m.providers {
 		m.cronScheduler.CronWithSeconds(p.GetCronExpression()).Do(p.Run)
+
 	}
 
 	m.cronScheduler.StartAsync()

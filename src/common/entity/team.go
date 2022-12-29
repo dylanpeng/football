@@ -15,6 +15,10 @@ func (e *Team) TableName() string {
 	return "data_team"
 }
 
+func (e *Team) PrimaryPairs() []interface{} {
+	return []interface{}{"id", e.Id}
+}
+
 func (e *Team) PrimarySeted() bool {
 	return e.Id > 0
 }

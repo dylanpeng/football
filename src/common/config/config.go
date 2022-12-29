@@ -3,11 +3,13 @@ package config
 import (
 	"football/lib/gorm"
 	"football/lib/logger"
+	"football/lib/redis"
 )
 
 type Config struct {
-	DB  map[string]*gorm.Config `toml:"db" json:"db"`
-	Log *logger.Config          `toml:"log" json:"log"`
+	Cache map[string]*redis.Config `toml:"cache" json:"cache"`
+	DB    map[string]*gorm.Config  `toml:"db" json:"db"`
+	Log   *logger.Config           `toml:"log" json:"log"`
 }
 
 var conf *Config

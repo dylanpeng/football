@@ -42,6 +42,10 @@ func (e *Match) TableName() string {
 	return "data_match"
 }
 
+func (e *Match) PrimaryPairs() []interface{} {
+	return []interface{}{"id", e.Id}
+}
+
 func (e *Match) PrimarySeted() bool {
 	return e.Id > 0
 }
